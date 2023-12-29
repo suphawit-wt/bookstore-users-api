@@ -1,12 +1,17 @@
 package app
 
-import "github.com/gin-gonic/gin"
+import (
+	"bookstore/users/database"
+
+	"github.com/gin-gonic/gin"
+)
 
 var (
 	router = gin.Default()
 )
 
 func StartApplication() {
-	mapUrls()
+	database.InitDatabase()
+	setupRoutes()
 	router.Run(":8080")
 }
