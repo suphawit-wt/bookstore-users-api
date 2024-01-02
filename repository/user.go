@@ -1,4 +1,4 @@
-package models
+package repository
 
 import "time"
 
@@ -20,4 +20,13 @@ type UserPublic struct {
 	Status      string    `json:"status" db:"status"`
 	Password    []byte    `json:"-" db:"password"`
 	DateCreated time.Time `json:"date_created" db:"date_created"`
+}
+
+type UserRepository interface {
+	GetAll() ([]User, error)
+	GetById(int64) (*User, error)
+	GetByStatus(string) ([]UserPublic, error)
+	Create(User) error
+	Update(int64, User) error
+	Delete(int64) error
 }

@@ -2,38 +2,14 @@ version: "3.8"
 services:
   bookstore-users-db:
     container_name: bookstore-users-db
-    image: mysql:8.2
+    image: mcr.microsoft.com/mssql/server:2022-CU10-ubuntu-22.04
     environment:
-      - MYSQL_DATABASE=bookstore_users_db
-      - MYSQL_USER=bookmin
-      - MYSQL_PASSWORD=bookpass3210
-      - MYSQL_ROOT_PASSWORD=rbookpass3210
+      - MSSQL_SA_PASSWORD=rbook#Pass3210
+      - ACCEPT_EULA=Y
     ports:
-      - "3306:3306"
-    networks:
-      - bookstore_users_net
-    restart: always
+      - "1433:1433"
+    restart: unless-stopped
     volumes:
-      - ./data/mysql:/var/lib/mysql
-
-  bookstore-users-phpmyadmin:
-    depends_on:
-      - bookstore-users-db
-    container_name: bookstore-users-phpmyadmin
-    image: phpmyadmin/phpmyadmin:5.2
-    environment:
-      - PMA_HOST=bookstore-users-db
-    ports:
-      - "8011:80"
-    networks:
-      - bookstore_users_net
-    restart: always
-
-networks:
-  bookstore_users_net:
-    name: bookstore_users_net
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.26.0.0/16
-          gateway: 172.26.0.1
+      - ./data/mssql/data:/var/opt/mssql/data
+      - ./data/mssql/log:/var/opt/mssql/log
+      - ./data/mssql/secrets:/var/opt/mssql/secrets

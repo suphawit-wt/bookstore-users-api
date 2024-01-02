@@ -1,17 +1,15 @@
 package database
 
 import (
-	"fmt"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/microsoft/go-mssqldb"
 )
 
-var DB *sqlx.DB
-
-func InitDatabase() {
+func InitDatabase() *sqlx.DB {
 	var err error
 
 	query := url.Values{}
@@ -22,14 +20,17 @@ func InitDatabase() {
 		Scheme:   os.Getenv("DB_SCHEME"),
 		User:     url.UserPassword(os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD")),
 		Host:     os.Getenv("DB_HOST"),
-		Path:     os.Getenv("DB_INSTANCE"),
 		RawQuery: query.Encode(),
 	}
 
-	fmt.Println(dsn.String())
-
-	DB, err = sqlx.Connect("sqlserver", dsn.String())
+	db, err := sqlx.Connect("sqlserver", dsn.String())
 	if err != nil {
 		panic(err)
 	}
+
+	db.SetConnMaxLifetime(3 * time.Minute)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
+
+	return db
 }
