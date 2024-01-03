@@ -37,10 +37,10 @@ func (r userRepositoryDB) GetById(id int64) (*User, error) {
 	return &user, nil
 }
 
-func (r userRepositoryDB) GetByStatus(status string) ([]UserPublic, error) {
+func (r userRepositoryDB) GetByStatus(status string) ([]User, error) {
 	query := "SELECT * FROM users WHERE status = @p1;"
 
-	users := []UserPublic{}
+	users := []User{}
 	err := r.db.Select(&users, query, status)
 	if err != nil {
 		return nil, err

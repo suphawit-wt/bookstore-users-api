@@ -2,7 +2,6 @@ package handler
 
 import (
 	"bookstore/users/errs"
-	"bookstore/users/repository"
 	"bookstore/users/services"
 	"net/http"
 	"strconv"
@@ -47,7 +46,7 @@ func (h userHandler) SearchUsers(c *gin.Context) {
 }
 
 func (h userHandler) CreateUser(c *gin.Context) {
-	req := repository.User{}
+	req := services.CreateUserRequest{}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		handleError(c, errs.NewBadRequestError("Invalid JSON Body."))
@@ -72,7 +71,7 @@ func (h userHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	req := repository.User{}
+	req := services.UpdateUserRequest{}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		handleError(c, errs.NewBadRequestError("Invalid JSON Body."))
